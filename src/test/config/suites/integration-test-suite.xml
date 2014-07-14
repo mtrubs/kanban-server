@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="10" verbose="2" name="Integration Test Suite"
+       annotations="JDK" parallel="tests">
+
+    <test name="Integration tests">
+        <groups>
+            <run>
+                <include name="integration.*"/>
+                <exclude name="*.broken"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.mtrubs.*"/>
+        </packages>
+    </test>
+
+</suite>
