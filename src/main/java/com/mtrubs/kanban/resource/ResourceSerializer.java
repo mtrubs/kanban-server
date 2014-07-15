@@ -10,11 +10,11 @@ import com.google.gson.GsonBuilder;
 public class ResourceSerializer {
 
     private Gson gson = new GsonBuilder().create();
-    
+
     public String toJson(Object data) {
         return this.gson.toJson(data);
     }
-    
+
     public <T> T fromJson(String data, Class<T> type) {
         return this.gson.fromJson(data, type);
     }

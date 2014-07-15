@@ -1,7 +1,12 @@
 package com.mtrubs.kanban.module;
 
 import com.google.inject.AbstractModule;
-import com.mtrubs.kanban.resource.ResourceSerializer;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.mtrubs.kanban.repo.ConnectionFactory;
+import com.mtrubs.kanban.repo.MybatisStoryRepository;
+import com.mtrubs.kanban.repo.StoryRepository;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 /**
  * @author mrubino
@@ -11,6 +16,12 @@ public class ResourceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(ResourceSerializer.class).asEagerSingleton();
+        bind(StoryRepository.class).to(MybatisStoryRepository.class).asEagerSingleton();
+    }
+
+    @Singleton
+    @Provides
+    SqlSessionFactory getSqlSessionFactory() {
+        return ConnectionFactory.getSession();
     }
 }
