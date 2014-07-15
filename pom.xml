@@ -13,9 +13,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- flags -->
-        <skip.tests>false</skip.tests>
+        <skip.all>false</skip.all>
+        <skip.db>${skip.all}</skip.db>
+        <skip.tests>${skip.all}</skip.tests>
         <skip.unit>${skip.tests}</skip.unit>
         <skip.integration>${skip.tests}</skip.integration>
+        <!-- database properties -->
+        <database.name>kanban</database.name>
+        <database.driver>com.mysql.jdbc.Driver</database.driver>
+        <database.url>jdbc:mysql://localhost:3306/${database.name}</database.url>
+        <database.user>root</database.user>
+        <database.password/>
+        <mysql.connector.version>5.1.31</mysql.connector.version>
     </properties>
     <prerequisites>
         <maven>3.0</maven>
@@ -25,7 +34,7 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>false</filtering>
+                <filtering>true</filtering>
                 <includes>
                     <include>**/*</include>
                 </includes>
@@ -146,11 +155,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.1.26</version>
-            </plugin>
+            <!-- versions plugin to allow for rules -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
@@ -159,6 +164,43 @@
                     <rulesUri>file://${basedir}/config/maven/versions-rules.xml</rulesUri>
                 </configuration>
                 <inherited>false</inherited>
+            </plugin>
+            <!-- configure database -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <driver>${database.driver}</driver>
+                    <autocommit>true</autocommit>
+                    <skip>${skip.db}</skip>
+                    <url>${database.url}</url>
+                    <username>${database.user}</username>
+                    <password>${database.password}</password>
+                    <keepFormat>false</keepFormat>
+                    <enableFiltering>true</enableFiltering>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql.connector.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>create</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <srcFiles>
+                                <srcFile>src/main/sql/database.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -211,7 +253,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.31</version>
+            <version>${mysql.connector.version}</version>
             <scope>runtime</scope>
         </dependency>
         <!-- test dependencies -->

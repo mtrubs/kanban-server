@@ -17,7 +17,7 @@ public interface StoryDao {
             "   s.title as title," +
             "   s.description as description," +
             "   s.points as points" +
-            " FROM Story" +
+            " FROM Story s" +
             " WHERE id=#{storyId}")
     Story getStory(@Param("storyId") int id);
 
@@ -26,7 +26,7 @@ public interface StoryDao {
             "   s.title as title," +
             "   s.description as description," +
             "   s.points as points" +
-            " FROM Story" +
+            " FROM Story s" +
             " ORDER BY s.id")
     Collection<Story> getAll();
 }
