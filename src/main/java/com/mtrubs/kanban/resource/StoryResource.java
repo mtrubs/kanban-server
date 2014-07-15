@@ -5,13 +5,14 @@ import com.mtrubs.kanban.domain.Story;
 import com.mtrubs.kanban.repo.StoryRepository;
 import org.apache.http.HttpStatus;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
 
 /**
+ * Resource for interacting with stories.
+ *
  * @author mrubino
  * @since 2014-07-13
  */
@@ -26,11 +27,67 @@ public class StoryResource extends BaseResource {
         this.storyRepository = storyRepository;
     }
 
+    /**
+     * Responsible for getting all the stories.
+     *
+     * @return a list of all stories in json.
+     */
     @GET
     @Path("/")
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getStories() {
         Collection<Story> stories = this.storyRepository.getAll();
         return Response.status(HttpStatus.SC_OK).entity(toJson(stories)).build();
+    }
+
+    /**
+     * Responsible for creating a new story.
+     *
+     * @param json the string json.
+     * @return the created story in json.
+     */
+    @POST
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response postStory(String json) {
+        Story story = fromJson(json, Story.class);
+        // TODO: create
+        return Response.status(HttpStatus.SC_CREATED).entity(toJson(story)).build();
+    }
+
+    /**
+     * Responsible for getting the given story.
+     *
+     * @param id the id of the story to get.
+     * @return the story in json.
+     */
+    @GET
+    @Path("/${id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStory(@PathParam("id") int id) {
+        Story story = this.storyRepository.getStory(id);
+        if (story == null) {
+            return Response.status(HttpStatus.SC_NOT_FOUND).build();
+        } else {
+            return Response.status(HttpStatus.SC_OK).entity(toJson(story)).build();
+        }
+    }
+
+    /**
+     * Responsible for updating the given story.
+     *
+     * @param id   the id of the story to update.
+     * @param json the string json.
+     * @return the updated story in json.
+     */
+    @PUT
+    @Path("/${id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response putStory(@PathParam("id") int id, String json) {
+        Story story = fromJson(json, Story.class);
+        // TODO: update
+        return Response.status(HttpStatus.SC_OK).entity(toJson(story)).build();
     }
 }
