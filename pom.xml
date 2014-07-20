@@ -25,6 +25,12 @@
         <database.user>root</database.user>
         <database.password/>
         <mysql.connector.version>5.1.31</mysql.connector.version>
+        <!-- coverage properties -->
+        <coverage.reports.dir>${project.build.directory}/coverage-reports</coverage.reports.dir>
+        <coverage.report.unit>${coverage.reports.dir}/jacoco-unit.exec</coverage.report.unit>
+        <coverage.output.unit>${coverage.reports.dir}/unit</coverage.output.unit>
+        <coverage.report.integration>${coverage.reports.dir}/jacoco-integrtion.exec</coverage.report.integration>
+        <coverage.output.integration>${coverage.reports.dir}/integration</coverage.output.integration>
     </properties>
     <prerequisites>
         <maven>3.0</maven>
@@ -76,52 +82,52 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.1.201405082137</version>
                 <executions>
-                    <!-- generate the coverage data in jacoco.report.unit -->
+                    <!-- generate the coverage data in coverage.report.unit -->
                     <execution>
                         <id>jacoco-initialize-unit</id>
-                        <phase>initialize</phase>
+                        <phase>process-test-classes</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
                             <propertyName>argLine.unit</propertyName>
-                            <destFile>${jacoco.report.unit}</destFile>
+                            <destFile>${coverage.report.unit}</destFile>
                         </configuration>
                     </execution>
-                    <!-- generate the coverage data in jacoco.report.integration -->
+                    <!-- generate the coverage data in coverage.report.integration -->
                     <execution>
                         <id>jacoco-initialize-integration</id>
-                        <phase>prepare-package</phase>
+                        <phase>pre-integration-test</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
                             <propertyName>argLine.integration</propertyName>
-                            <destFile>${jacoco.report.integration}</destFile>
+                            <destFile>${coverage.report.integration}</destFile>
                         </configuration>
                     </execution>
-                    <!-- generate coverage report in jacoco.output.unit from jacoco.report.unit -->
+                    <!-- generate coverage report in coverage.output.unit from coverage.report.unit -->
                     <execution>
                         <id>report-unit</id>
-                        <phase>site</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <dataFile>${jacoco.report.unit}</dataFile>
-                            <outputDirectory>${jacoco.output.unit}</outputDirectory>
+                            <dataFile>${coverage.report.unit}</dataFile>
+                            <outputDirectory>${coverage.output.unit}</outputDirectory>
                         </configuration>
                     </execution>
-                    <!-- generate coverage report in jacoco.output.integration from jacoco.report.integration -->
+                    <!-- generate coverage report in coverage.output.integration from coverage.report.integration -->
                     <execution>
                         <id>report-integration</id>
-                        <phase>site</phase>
+                        <phase>post-integration-test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <dataFile>${jacoco.report.integration}</dataFile>
-                            <outputDirectory>${jacoco.output.integration}</outputDirectory>
+                            <dataFile>${coverage.report.integration}</dataFile>
+                            <outputDirectory>${coverage.output.integration}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
