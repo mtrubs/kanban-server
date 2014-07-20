@@ -13,4 +13,6 @@ public interface StoryRepository {
     Story getStory(int id);
 
     Collection<Story> getAll();
+    
+    void insert(Story story);
 }

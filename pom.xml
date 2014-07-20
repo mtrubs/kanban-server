@@ -44,6 +44,10 @@
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
             </testResource>
         </testResources>
         <plugins>
@@ -130,14 +134,13 @@
                 <configuration>
                     <!--suppress MavenModelInspection -->
                     <argLine>${argLine.unit}</argLine>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>src/test/config/suites/unit-test-suite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
                     <skipTests>${skip.unit}</skipTests>
+                    <groups>UnitTest</groups>
                 </configuration>
             </plugin>
             <!-- integration tests -->
             <plugin>
+                <!-- TODO: this doesn't seem to pick up any tests -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.17</version>
@@ -145,6 +148,7 @@
                     <!--suppress MavenModelInspection -->
                     <argLine>${argLine.integration}</argLine>
                     <skipTests>${skip.integration}</skipTests>
+                    <groups>IntegrationTest</groups>
                 </configuration>
                 <executions>
                     <execution>
@@ -261,6 +265,12 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.8.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -1,6 +1,8 @@
 package com.mtrubs.kanban.repo.dao;
 
 import com.mtrubs.kanban.domain.Story;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -19,7 +21,7 @@ public interface StoryDao {
             "   s.points as points" +
             " FROM Story s" +
             " WHERE id=#{storyId}")
-    Story getStory(@Param("storyId") int id);
+    Story select(@Param("storyId") int id);
 
     @Select(" SELECT" +
             "   s.id as id," +
@@ -28,5 +30,10 @@ public interface StoryDao {
             "   s.points as points" +
             " FROM Story s" +
             " ORDER BY s.id")
-    Collection<Story> getAll();
+    Collection<Story> selectAll();
+
+    @Insert(" INSERT INTO Story (title, description, points)" +
+            " VALUES (#{title}, #{description}, #{points})")
+    @Options(useGeneratedKeys = true, flushCache = true)
+    void insert(Story story);
 }

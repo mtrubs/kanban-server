@@ -24,18 +24,35 @@ public class MybatisStoryRepository implements StoryRepository {
     @Override
     public Story getStory(int id) {
         SqlSession session = this.connection.openSession();
-        StoryDao dao = session.getMapper(StoryDao.class);
-        Story story = dao.getStory(id);
-        session.close();
-        return story;
+        try {
+            StoryDao dao = session.getMapper(StoryDao.class);
+            return dao.select(id);
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public Collection<Story> getAll() {
         SqlSession session = this.connection.openSession();
-        StoryDao dao = session.getMapper(StoryDao.class);
-        Collection<Story> stories = dao.getAll();
-        session.close();
-        return stories;
+        try {
+            StoryDao dao = session.getMapper(StoryDao.class);
+            return dao.selectAll();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public void insert(Story story) {
+        SqlSession session = this.connection.openSession();
+        try {
+            // TODO: MTR: validate
+            StoryDao dao = session.getMapper(StoryDao.class);
+            dao.insert(story);
+            session.commit();
+        } finally {
+            session.close();
+        }
     }
 }
