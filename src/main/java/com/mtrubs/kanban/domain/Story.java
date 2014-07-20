@@ -9,7 +9,7 @@ public class Story {
     private Integer id;
     private String title;
     private String description;
-    private int points;
+    private Integer points;
     
     public Story(){}
 

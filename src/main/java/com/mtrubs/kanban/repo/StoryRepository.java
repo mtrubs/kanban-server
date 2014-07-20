@@ -14,5 +14,5 @@ public interface StoryRepository {
 
     Collection<Story> getAll();
     
-    void insert(Story story);
+    void create(Story story);
 }

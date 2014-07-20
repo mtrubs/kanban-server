@@ -44,7 +44,7 @@ public class MybatisStoryRepository implements StoryRepository {
     }
 
     @Override
-    public void insert(Story story) {
+    public void create(Story story) {
         SqlSession session = this.connection.openSession();
         try {
             // TODO: MTR: validate

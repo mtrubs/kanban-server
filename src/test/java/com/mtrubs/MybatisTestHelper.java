@@ -5,7 +5,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -17,14 +17,18 @@ import static org.testng.Assert.fail;
  * @author mrubino
  * @since 2014-07-19
  */
-public abstract class MybatisBaseTest {
+public class MybatisTestHelper {
 
-    @AfterClass
-    protected void cleanDatabase() {
+    private MybatisTestHelper() {
+    }
+
+    @AfterMethod
+    public static void cleanDatabase() {
         SqlSessionFactory factory = ConnectionFactory.getSession();
         SqlSession session = factory.openSession();
         Connection connection = session.getConnection();
         ScriptRunner runner = new ScriptRunner(connection);
+        runner.setLogWriter(null);
 
         Reader reader = null;
         try {
