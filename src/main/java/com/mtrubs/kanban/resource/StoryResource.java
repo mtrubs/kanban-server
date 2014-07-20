@@ -50,9 +50,9 @@ public class StoryResource extends BaseResource {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postStory(String json) {
+    public Response createStory(String json) {
         Story story = fromJson(json, Story.class);
-        // TODO: create
+        this.storyRepository.create(story);
         return Response.status(HttpStatus.SC_CREATED).entity(toJson(story)).build();
     }
 
@@ -63,7 +63,7 @@ public class StoryResource extends BaseResource {
      * @return the story in json.
      */
     @GET
-    @Path("/${id}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStory(@PathParam("id") int id) {
         Story story = this.storyRepository.getStory(id);
@@ -72,22 +72,5 @@ public class StoryResource extends BaseResource {
         } else {
             return Response.status(HttpStatus.SC_OK).entity(toJson(story)).build();
         }
-    }
-
-    /**
-     * Responsible for updating the given story.
-     *
-     * @param id   the id of the story to update.
-     * @param json the string json.
-     * @return the updated story in json.
-     */
-    @PUT
-    @Path("/${id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response putStory(@PathParam("id") int id, String json) {
-        Story story = fromJson(json, Story.class);
-        // TODO: update
-        return Response.status(HttpStatus.SC_OK).entity(toJson(story)).build();
     }
 }
